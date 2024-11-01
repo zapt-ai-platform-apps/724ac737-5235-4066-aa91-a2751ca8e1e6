@@ -19,8 +19,8 @@ Sentry.init({
 window.progressierAppRuntimeSettings = {
   uid: import.meta.env.VITE_PUBLIC_APP_ID,
   icon512: "https://otebnzqfzytqyyjdfhzr.supabase.co/storage/v1/render/image/public/icons/updated-icon.png?width=512&height=512",
-  name: "منشئ المواقع والتطبيقات الاحترافية",
-  shortName: "منشئ المواقع والتطبيقات"
+  name: "منشئ المواقع الاحترافية",
+  shortName: "منشئ المواقع"
 };
 
 let script = document.createElement('script');

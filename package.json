@@ -1,7 +1,7 @@
 {
-  "name": "professional-website-and-app-builder",
+  "name": "professional-website-builder",
   "version": "1.0.0",
-  "description": "An AI-based builder for professional websites and apps",
+  "description": "منشئ المواقع الاحترافية باستخدام الذكاء الاصطناعي",
   "type": "module",
   "scripts": {
     "dev": "vite",

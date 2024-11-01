@@ -4,21 +4,16 @@ function BuilderForm(props) {
   const {
     projectName,
     setProjectName,
-    projectType,
-    setProjectType,
     projectField,
     setProjectField,
     projectDescription,
     setProjectDescription,
     projectFeatures,
     setProjectFeatures,
-    projectPlatforms,
-    setProjectPlatforms,
     projectDesign,
     setProjectDesign,
     projectAudience,
     setProjectAudience,
-    projectTypes,
     projectFields,
     loading,
     handleGeneratePlan,
@@ -26,28 +21,15 @@ function BuilderForm(props) {
 
   return (
     <div class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold mb-4 text-purple-600">ادخل تفاصيل المشروع</h2>
+      <h2 class="text-2xl font-bold mb-4 text-purple-600">ادخل تفاصيل الموقع</h2>
       <div class="space-y-4">
         <input
           type="text"
           value={projectName()}
           onInput={(e) => setProjectName(e.target.value)}
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          placeholder="اسم المشروع"
+          placeholder="اسم الموقع"
         />
-        <select
-          value={projectType()}
-          onChange={(e) => setProjectType(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer"
-        >
-          <For each={projectTypes}>
-            {(type) => (
-              <option value={type.value} disabled={type.value === ''}>
-                {type.label}
-              </option>
-            )}
-          </For>
-        </select>
         <select
           value={projectField()}
           onChange={(e) => setProjectField(e.target.value)}
@@ -66,7 +48,7 @@ function BuilderForm(props) {
           onInput={(e) => setProjectDescription(e.target.value)}
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           rows="3"
-          placeholder="وصف المشروع..."
+          placeholder="وصف الموقع..."
         ></textarea>
         <textarea
           value={projectFeatures()}
@@ -75,13 +57,6 @@ function BuilderForm(props) {
           rows="2"
           placeholder="الميزات المطلوبة..."
         ></textarea>
-        <input
-          type="text"
-          value={projectPlatforms()}
-          onInput={(e) => setProjectPlatforms(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          placeholder="منصة الاستهداف (مثال: Android، iOS، الويب)"
-        />
         <input
           type="text"
           value={projectDesign()}
@@ -104,7 +79,7 @@ function BuilderForm(props) {
           disabled={loading()}
         >
           <Show when={loading()}>جاري التحميل...</Show>
-          <Show when={!loading()}>توليد الموقع/التطبيق</Show>
+          <Show when={!loading()}>توليد الموقع</Show>
         </button>
       </div>
     </div>
