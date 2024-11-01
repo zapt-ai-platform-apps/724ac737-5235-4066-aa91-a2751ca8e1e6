@@ -12,12 +12,6 @@ Sentry.init({
   }
 });
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const openai = new OpenAIApi(configuration);
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ message: 'Method not allowed' });
@@ -32,6 +26,11 @@ export default async function handler(req, res) {
   }
 
   try {
+    const configuration = new Configuration({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+    const openai = new OpenAIApi(configuration);
+
     const completion = await openai.createCompletion({
       model: 'text-davinci-003',
       prompt: prompt,
