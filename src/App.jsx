@@ -9,7 +9,8 @@ function App() {
   const [projectName, setProjectName] = createSignal('');
   const [projectField, setProjectField] = createSignal('');
   const [projectDescription, setProjectDescription] = createSignal('');
-  const [projectFeatures, setProjectFeatures] = createSignal('');
+  const [selectedFeatures, setSelectedFeatures] = createSignal([]);
+  const [additionalFeatures, setAdditionalFeatures] = createSignal('');
   const [projectDesign, setProjectDesign] = createSignal('');
   const [projectAudience, setProjectAudience] = createSignal('');
   const [generatedPlan, setGeneratedPlan] = createSignal('');
@@ -28,7 +29,7 @@ function App() {
       !projectName() ||
       !projectField() ||
       !projectDescription() ||
-      !projectFeatures() ||
+      (!selectedFeatures().length && !additionalFeatures()) ||
       !projectDesign() ||
       !projectAudience()
     )
@@ -36,12 +37,13 @@ function App() {
 
     setLoading(true);
     try {
+      const features = selectedFeatures().join(', ') + (additionalFeatures() ? ', ' + additionalFeatures() : '');
       const prompt = `
 من فضلك قم بإنشاء خطة مشروع احترافية لإنشاء موقع إلكتروني في مجال ${projectField()} باللغة العربية بالاستناد إلى المعلومات التالية:
 
 اسم الموقع: ${projectName()}
 وصف الموقع: ${projectDescription()}
-الميزات المطلوبة: ${projectFeatures()}
+الميزات المطلوبة: ${features}
 التصميم المرغوب: ${projectDesign()}
 الجمهور المستهدف: ${projectAudience()}
 
@@ -70,8 +72,10 @@ function App() {
           setProjectField={setProjectField}
           projectDescription={projectDescription}
           setProjectDescription={setProjectDescription}
-          projectFeatures={projectFeatures}
-          setProjectFeatures={setProjectFeatures}
+          selectedFeatures={selectedFeatures}
+          setSelectedFeatures={setSelectedFeatures}
+          additionalFeatures={additionalFeatures}
+          setAdditionalFeatures={setAdditionalFeatures}
           projectDesign={projectDesign}
           setProjectDesign={setProjectDesign}
           projectAudience={projectAudience}

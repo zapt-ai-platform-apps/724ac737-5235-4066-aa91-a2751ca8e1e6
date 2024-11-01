@@ -8,8 +8,10 @@ function BuilderForm(props) {
     setProjectField,
     projectDescription,
     setProjectDescription,
-    projectFeatures,
-    setProjectFeatures,
+    selectedFeatures,
+    setSelectedFeatures,
+    additionalFeatures,
+    setAdditionalFeatures,
     projectDesign,
     setProjectDesign,
     projectAudience,
@@ -18,6 +20,19 @@ function BuilderForm(props) {
     loading,
     handleGeneratePlan,
   } = props;
+
+  const featureOptions = [
+    { value: 'تسجيل الدخول وتسجيل الحساب', label: 'تسجيل الدخول وتسجيل الحساب' },
+    { value: 'سلة التسوق', label: 'سلة التسوق' },
+    { value: 'محرك بحث', label: 'محرك بحث' },
+    { value: 'دعم متعدد اللغات', label: 'دعم متعدد اللغات' },
+    { value: 'معرض الصور', label: 'معرض الصور' },
+    { value: 'نظام تواصل مع العملاء', label: 'نظام تواصل مع العملاء' },
+    { value: 'مدونة', label: 'مدونة' },
+    { value: 'نماذج اتصال', label: 'نماذج اتصال' },
+    { value: 'خرائط الموقع', label: 'خرائط الموقع' },
+    { value: 'تسجيل النشرات البريدية', label: 'تسجيل النشرات البريدية' },
+  ];
 
   return (
     <div class="bg-white p-6 rounded-lg shadow-md h-full">
@@ -50,13 +65,41 @@ function BuilderForm(props) {
           rows="3"
           placeholder="وصف الموقع..."
         ></textarea>
-        <textarea
-          value={projectFeatures()}
-          onInput={(e) => setProjectFeatures(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          rows="2"
-          placeholder="الميزات المطلوبة..."
-        ></textarea>
+        <div class="space-y-2">
+          <label class="font-semibold text-gray-700">الميزات المطلوبة:</label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <For each={featureOptions}>
+              {(feature) => (
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={feature.value}
+                    value={feature.value}
+                    checked={selectedFeatures().includes(feature.value)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedFeatures([...selectedFeatures(), feature.value]);
+                      } else {
+                        setSelectedFeatures(selectedFeatures().filter((item) => item !== feature.value));
+                      }
+                    }}
+                    class="cursor-pointer"
+                  />
+                  <label for={feature.value} class="mr-2 cursor-pointer">
+                    {feature.label}
+                  </label>
+                </div>
+              )}
+            </For>
+          </div>
+          <textarea
+            value={additionalFeatures()}
+            onInput={(e) => setAdditionalFeatures(e.target.value)}
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+            rows="2"
+            placeholder="ميزات إضافية..."
+          ></textarea>
+        </div>
         <input
           type="text"
           value={projectDesign()}
