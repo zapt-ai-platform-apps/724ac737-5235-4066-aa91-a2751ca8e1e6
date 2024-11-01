@@ -10,6 +10,7 @@ function GeneratedWebsite() {
   const state = location.state;
   const [loadingWebsite, setLoadingWebsite] = createSignal(false);
   const [zipBlob, setZipBlob] = createSignal(null);
+  const [error, setError] = createSignal('');
 
   onMount(() => {
     if (!state) {
@@ -21,41 +22,45 @@ function GeneratedWebsite() {
 
   const handleGenerateWebsite = async () => {
     setLoadingWebsite(true);
+    setError('');
     try {
       const prompt = `
-من فضلك قم بإنشاء كود موقع إلكتروني باللغة العربية بناءً على المعلومات التالية:
+من فضلك قم بإنشاء كود موقع إلكتروني بسيط باللغة العربية يعتمد على المعلومات التالية:
 
 اسم الموقع: ${state.projectName}
 وصف الموقع: ${state.projectDescription}
 
-يجب أن يكون الكود في صيغة JSON بالهيكل التالي:
+يجب أن يتضمن الكود صفحة HTML واحدة تحمل اسم "index.html" وتحتوي على العناصر الأساسية للموقع.
+
+التزم بالهيكل التالي في إجابتك:
 
 {
   "files": [
-    { "path": "index.html", "content": "<html>...</html>" },
-    { "path": "styles/main.css", "content": "body { ... }" },
-    { "path": "scripts/app.js", "content": "console.log('hello');" }
+    { "path": "index.html", "content": "<!DOCTYPE html>... </html>" }
   ]
 }
 
-يشمل الكود جميع الملفات الضرورية (HTML، CSS، JavaScript) ويتم ترتيبها بالشكل المناسب.
-
-تأكد من أن الكود جاهز للتنفيذ، واستخدم تعليقات داخل الكود لشرح الأجزاء المختلفة.
+لا تضف أي نص إضافي خارج نطاق JSON المطلوب.
       `;
       const result = await createEvent('chatgpt_request', {
         prompt: prompt.trim(),
         response_type: 'json'
       });
 
-      const zip = new JSZip();
-      result.files.forEach(file => {
-        zip.file(file.path, file.content);
-      });
+      if (result && result.files) {
+        const zip = new JSZip();
+        result.files.forEach(file => {
+          zip.file(file.path, file.content);
+        });
 
-      const blob = await zip.generateAsync({ type: 'blob' });
-      setZipBlob(blob);
+        const blob = await zip.generateAsync({ type: 'blob' });
+        setZipBlob(blob);
+      } else {
+        setError('حدث خطأ أثناء توليد الموقع. الرجاء المحاولة مرة أخرى.');
+      }
     } catch (error) {
       console.error('Error generating website:', error);
+      setError('حدث خطأ أثناء توليد الموقع. الرجاء المحاولة مرة أخرى.');
     } finally {
       setLoadingWebsite(false);
     }
@@ -90,8 +95,14 @@ function GeneratedWebsite() {
           تنزيل الموقع
         </button>
       </Show>
-      <Show when={!loadingWebsite() && !zipBlob()}>
-        <p class="text-gray-700 mb-4">حدث خطأ أثناء توليد الموقع.</p>
+      <Show when={!loadingWebsite() && error()}>
+        <p class="text-red-600 mb-4">{error()}</p>
+        <button
+          class="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer mb-4"
+          onClick={handleGenerateWebsite}
+        >
+          حاول مرة أخرى
+        </button>
       </Show>
     </div>
   );

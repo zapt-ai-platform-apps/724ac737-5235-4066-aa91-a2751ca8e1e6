@@ -1,14 +1,18 @@
 import { createSignal } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
+import { Show } from 'solid-js';
 
 function BuilderForm() {
   const navigate = useNavigate();
 
   const [projectName, setProjectName] = createSignal('');
   const [projectDescription, setProjectDescription] = createSignal('');
+  const [loading, setLoading] = createSignal(false);
 
   const handleGeneratePlan = async () => {
     if (!projectName() || !projectDescription()) return;
+
+    setLoading(true);
 
     try {
       const prompt = `
@@ -32,6 +36,8 @@ function BuilderForm() {
       });
     } catch (error) {
       console.error('Error generating plan:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,10 +72,12 @@ function BuilderForm() {
         ></textarea>
         <div class="flex space-x-4 space-x-reverse">
           <button
-            class="mt-4 flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+            class={`mt-4 flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${loading() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-600'}`}
             onClick={handleGeneratePlan}
+            disabled={loading()}
           >
-            توليد الخطة
+            <Show when={!loading()}>توليد الخطة</Show>
+            <Show when={loading()}>جاري التوليد...</Show>
           </button>
           <button
             class="mt-4 flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
