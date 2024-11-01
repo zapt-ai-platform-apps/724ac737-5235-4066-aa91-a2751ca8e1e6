@@ -13,7 +13,7 @@ function GeneratedPlan() {
   };
 
   return (
-    <div class="mt-8 bg-white p-6 rounded-lg shadow-md flex-1 flex flex-col">
+    <div class="mt-8 bg-white p-6 rounded-lg shadow-md flex-1 flex flex-col text-gray-800">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold text-purple-600">الخطة المقترحة</h2>
         <button
