@@ -1,6 +1,7 @@
 import { createSignal } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { Show } from 'solid-js';
+import { createEvent } from '../supabaseClient';
 
 function BuilderForm() {
   const navigate = useNavigate();
