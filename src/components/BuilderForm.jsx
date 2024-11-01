@@ -17,8 +17,10 @@ function BuilderForm(props) {
     projectAudience,
     setProjectAudience,
     projectFields,
-    loading,
+    loadingPlan,
+    loadingWebsite,
     handleGeneratePlan,
+    handleGenerateWebsite,
   } = props;
 
   const featureOptions = [
@@ -114,16 +116,28 @@ function BuilderForm(props) {
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           placeholder="الجمهور المستهدف"
         />
-        <button
-          class={`mt-4 w-full px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-            loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-          }`}
-          onClick={handleGeneratePlan}
-          disabled={loading()}
-        >
-          <Show when={loading()}>جاري التحميل...</Show>
-          <Show when={!loading()}>توليد الموقع</Show>
-        </button>
+        <div class="flex space-x-4 space-x-reverse">
+          <button
+            class={`mt-4 flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+              loadingPlan() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+            }`}
+            onClick={handleGeneratePlan}
+            disabled={loadingPlan()}
+          >
+            <Show when={loadingPlan()}>جاري التحميل...</Show>
+            <Show when={!loadingPlan()}>توليد الخطة</Show>
+          </button>
+          <button
+            class={`mt-4 flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+              loadingWebsite() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+            }`}
+            onClick={handleGenerateWebsite}
+            disabled={loadingWebsite()}
+          >
+            <Show when={loadingWebsite()}>جاري التوليد...</Show>
+            <Show when={!loadingWebsite()}>توليد الموقع</Show>
+          </button>
+        </div>
       </div>
     </div>
   );

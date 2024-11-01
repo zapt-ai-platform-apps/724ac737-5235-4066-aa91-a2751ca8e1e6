@@ -4,11 +4,14 @@ import { Routes, Route } from '@solidjs/router';
 import Header from './components/Header';
 import BuilderForm from './components/BuilderForm';
 import GeneratedPlan from './components/GeneratedPlan';
+import GeneratedWebsite from './components/GeneratedWebsite';
 import DesignList from './components/DesignList';
 import { createEvent } from './supabaseClient';
 
 function App() {
-  const [loading, setLoading] = createSignal(false);
+  const [loadingPlan, setLoadingPlan] = createSignal(false);
+  const [loadingWebsite, setLoadingWebsite] = createSignal(false);
+
   const [projectName, setProjectName] = createSignal('');
   const [projectField, setProjectField] = createSignal('');
   const [projectDescription, setProjectDescription] = createSignal('');
@@ -17,6 +20,7 @@ function App() {
   const [projectDesign, setProjectDesign] = createSignal('');
   const [projectAudience, setProjectAudience] = createSignal('');
   const [generatedPlan, setGeneratedPlan] = createSignal('');
+  const [generatedWebsite, setGeneratedWebsite] = createSignal('');
 
   const projectFields = [
     { value: '', label: 'اختر مجال الموقع' },
@@ -38,7 +42,7 @@ function App() {
     )
       return;
 
-    setLoading(true);
+    setLoadingPlan(true);
     try {
       const features = selectedFeatures().join(', ') + (additionalFeatures() ? ', ' + additionalFeatures() : '');
       const prompt = `
@@ -60,7 +64,44 @@ function App() {
     } catch (error) {
       console.error('Error generating plan:', error);
     } finally {
-      setLoading(false);
+      setLoadingPlan(false);
+    }
+  };
+
+  const handleGenerateWebsite = async () => {
+    if (
+      !projectName() ||
+      !projectField() ||
+      !projectDescription() ||
+      (!selectedFeatures().length && !additionalFeatures()) ||
+      !projectDesign() ||
+      !projectAudience()
+    )
+      return;
+
+    setLoadingWebsite(true);
+    try {
+      const features = selectedFeatures().join(', ') + (additionalFeatures() ? ', ' + additionalFeatures() : '');
+      const prompt = `
+من فضلك قم بإنشاء كود HTML وCSS وJavaScript لموقع إلكتروني في مجال ${projectField()} باللغة العربية بالاستناد إلى المعلومات التالية:
+
+اسم الموقع: ${projectName()}
+وصف الموقع: ${projectDescription()}
+الميزات المطلوبة: ${features}
+التصميم المرغوب: ${projectDesign()}
+الجمهور المستهدف: ${projectAudience()}
+
+يجب أن يكون الكود كاملاً وقابلاً للتنفيذ، مع فصل ملفات HTML وCSS وJavaScript، واستخدام تعليقات داخل الكود لشرح الأجزاء المختلفة.
+      `;
+      const result = await createEvent('chatgpt_request', {
+        prompt: prompt.trim(),
+        response_type: 'code'
+      });
+      setGeneratedWebsite(result);
+    } catch (error) {
+      console.error('Error generating website:', error);
+    } finally {
+      setLoadingWebsite(false);
     }
   };
 
@@ -89,11 +130,16 @@ function App() {
                   projectAudience={projectAudience}
                   setProjectAudience={setProjectAudience}
                   projectFields={projectFields}
-                  loading={loading}
+                  loadingPlan={loadingPlan}
+                  loadingWebsite={loadingWebsite}
                   handleGeneratePlan={handleGeneratePlan}
+                  handleGenerateWebsite={handleGenerateWebsite}
                 />
                 <Show when={generatedPlan()}>
                   <GeneratedPlan generatedPlan={generatedPlan} />
+                </Show>
+                <Show when={generatedWebsite()}>
+                  <GeneratedWebsite generatedWebsite={generatedWebsite} />
                 </Show>
               </>
             }
