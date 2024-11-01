@@ -2,8 +2,6 @@ import { render } from 'solid-js/web';
 import App from './App';
 import './index.css';
 
-import { Router } from '@solidjs/router';
-
 import * as Sentry from "@sentry/browser";
 
 Sentry.init({
@@ -31,7 +29,5 @@ script.setAttribute('defer', 'true');
 document.querySelector('head').appendChild(script);
 
 render(() => (
-  <Router>
-    <App />
-  </Router>
+  <App />
 ), document.getElementById('root'));

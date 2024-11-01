@@ -14,7 +14,6 @@
     "@sentry/node": "^8.35.0",
     "solid-markdown": "^2.0.13",
     "@zapt/zapt-js": "^1.0.5",
-    "@solidjs/router": "^0.8.4",
     "file-saver": "^2.0.5"
   },
   "devDependencies": {
