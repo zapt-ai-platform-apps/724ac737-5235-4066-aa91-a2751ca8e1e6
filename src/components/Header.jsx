@@ -8,9 +8,6 @@ function Header() {
         <NavLink href="/" end activeClass="text-purple-600 font-semibold" class="text-gray-700 hover:text-purple-600 cursor-pointer">
           الصفحة الرئيسية
         </NavLink>
-        <NavLink href="/designs" activeClass="text-purple-600 font-semibold" class="text-gray-700 hover:text-purple-600 cursor-pointer">
-          قائمة التصميمات
-        </NavLink>
       </nav>
     </div>
   );

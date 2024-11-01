@@ -5,7 +5,6 @@ import Header from './components/Header';
 import BuilderForm from './components/BuilderForm';
 import GeneratedPlan from './components/GeneratedPlan';
 import GeneratedWebsite from './components/GeneratedWebsite';
-import DesignList from './components/DesignList';
 import { createEvent } from './supabaseClient';
 
 function App() {
@@ -106,7 +105,7 @@ function App() {
   };
 
   return (
-    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-4 text-gray-800" dir="rtl">
+    <div class="h-full bg-gradient-to-br from-purple-100 to-blue-100 p-4 text-gray-800" dir="rtl">
       <div class="max-w-6xl mx-auto h-full flex flex-col">
         <Header />
         <Routes>
@@ -144,7 +143,6 @@ function App() {
               </>
             }
           />
-          <Route path="/designs" element={<DesignList />} />
         </Routes>
       </div>
     </div>
