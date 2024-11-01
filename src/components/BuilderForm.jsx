@@ -1,27 +1,29 @@
-import { For, Show } from 'solid-js';
+import { createSignal } from 'solid-js';
+import { useNavigate } from '@solidjs/router';
+import { For } from 'solid-js';
+import { createEvent } from '../supabaseClient';
 
-function BuilderForm(props) {
-  const {
-    projectName,
-    setProjectName,
-    projectField,
-    setProjectField,
-    projectDescription,
-    setProjectDescription,
-    selectedFeatures,
-    setSelectedFeatures,
-    additionalFeatures,
-    setAdditionalFeatures,
-    projectDesign,
-    setProjectDesign,
-    projectAudience,
-    setProjectAudience,
-    projectFields,
-    loadingPlan,
-    loadingWebsite,
-    handleGeneratePlan,
-    handleGenerateWebsite,
-  } = props;
+function BuilderForm() {
+  const navigate = useNavigate();
+  const [loadingPlan, setLoadingPlan] = createSignal(false);
+  const [loadingWebsite, setLoadingWebsite] = createSignal(false);
+
+  const [projectName, setProjectName] = createSignal('');
+  const [projectField, setProjectField] = createSignal('');
+  const [projectDescription, setProjectDescription] = createSignal('');
+  const [selectedFeatures, setSelectedFeatures] = createSignal([]);
+  const [additionalFeatures, setAdditionalFeatures] = createSignal('');
+  const [projectDesign, setProjectDesign] = createSignal('');
+  const [projectAudience, setProjectAudience] = createSignal('');
+
+  const projectFields = [
+    { value: '', label: 'اختر مجال الموقع' },
+    { value: 'تجارة إلكترونية', label: 'تجارة إلكترونية' },
+    { value: 'تعليم', label: 'تعليم' },
+    { value: 'صحة', label: 'صحة' },
+    { value: 'ترفيه', label: 'ترفيه' },
+    { value: 'آخر', label: 'آخر' },
+  ];
 
   const featureOptions = [
     { value: 'تسجيل الدخول وتسجيل الحساب', label: 'تسجيل الدخول وتسجيل الحساب' },
@@ -35,6 +37,80 @@ function BuilderForm(props) {
     { value: 'خرائط الموقع', label: 'خرائط الموقع' },
     { value: 'تسجيل النشرات البريدية', label: 'تسجيل النشرات البريدية' },
   ];
+
+  const handleGeneratePlan = async () => {
+    if (
+      !projectName() ||
+      !projectField() ||
+      !projectDescription() ||
+      (!selectedFeatures().length && !additionalFeatures()) ||
+      !projectDesign() ||
+      !projectAudience()
+    )
+      return;
+
+    setLoadingPlan(true);
+    try {
+      const features = selectedFeatures().join(', ') + (additionalFeatures() ? ', ' + additionalFeatures() : '');
+      const prompt = `
+من فضلك قم بإنشاء خطة مشروع احترافية لإنشاء موقع إلكتروني في مجال ${projectField()} باللغة العربية بالاستناد إلى المعلومات التالية:
+
+اسم الموقع: ${projectName()}
+وصف الموقع: ${projectDescription()}
+الميزات المطلوبة: ${features}
+التصميم المرغوب: ${projectDesign()}
+الجمهور المستهدف: ${projectAudience()}
+
+يجب أن تكون الخطة مفصلة وتشمل جميع العناصر الأساسية لموقع احترافي، بما في ذلك التحليل الفني، ومتطلبات التطوير، وخطط التصميم، وخطوات الإطلاق.
+      `;
+      const result = await createEvent('chatgpt_request', {
+        prompt: prompt.trim(),
+        response_type: 'text'
+      });
+      navigate('/plan', { state: { generatedPlan: result } });
+    } catch (error) {
+      console.error('Error generating plan:', error);
+    } finally {
+      setLoadingPlan(false);
+    }
+  };
+
+  const handleGenerateWebsite = async () => {
+    if (
+      !projectName() ||
+      !projectField() ||
+      !projectDescription() ||
+      (!selectedFeatures().length && !additionalFeatures()) ||
+      !projectDesign() ||
+      !projectAudience()
+    )
+      return;
+
+    setLoadingWebsite(true);
+    try {
+      const features = selectedFeatures().join(', ') + (additionalFeatures() ? ', ' + additionalFeatures() : '');
+      const prompt = `
+من فضلك قم بإنشاء كود HTML وCSS وJavaScript لموقع إلكتروني في مجال ${projectField()} باللغة العربية بالاستناد إلى المعلومات التالية:
+
+اسم الموقع: ${projectName()}
+وصف الموقع: ${projectDescription()}
+الميزات المطلوبة: ${features}
+التصميم المرغوب: ${projectDesign()}
+الجمهور المستهدف: ${projectAudience()}
+
+يجب أن يكون الكود كاملاً وقابلاً للتنفيذ، مع فصل ملفات HTML وCSS وJavaScript، واستخدام تعليقات داخل الكود لشرح الأجزاء المختلفة.
+      `;
+      const result = await createEvent('chatgpt_request', {
+        prompt: prompt.trim(),
+        response_type: 'code'
+      });
+      navigate('/website', { state: { generatedWebsite: result } });
+    } catch (error) {
+      console.error('Error generating website:', error);
+    } finally {
+      setLoadingWebsite(false);
+    }
+  };
 
   return (
     <div class="bg-white p-6 rounded-lg shadow-md h-full">
@@ -124,8 +200,7 @@ function BuilderForm(props) {
             onClick={handleGeneratePlan}
             disabled={loadingPlan()}
           >
-            <Show when={loadingPlan()}>جاري التحميل...</Show>
-            <Show when={!loadingPlan()}>توليد الخطة</Show>
+            {loadingPlan() ? 'جاري التحميل...' : 'توليد الخطة'}
           </button>
           <button
             class={`mt-4 flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
@@ -134,8 +209,7 @@ function BuilderForm(props) {
             onClick={handleGenerateWebsite}
             disabled={loadingWebsite()}
           >
-            <Show when={loadingWebsite()}>جاري التوليد...</Show>
-            <Show when={!loadingWebsite()}>توليد الموقع</Show>
+            {loadingWebsite() ? 'جاري التوليد...' : 'توليد الموقع'}
           </button>
         </div>
       </div>
