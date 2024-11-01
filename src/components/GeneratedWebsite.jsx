@@ -28,6 +28,7 @@ function GeneratedWebsite() {
 من فضلك قم بإنشاء كود موقع إلكتروني احترافي باللغة العربية يعتمد على المعلومات التالية:
 
 اسم الموقع: ${state.projectName}
+نوع الموقع: ${state.projectType}
 وصف الموقع: ${state.projectDescription}
 
 يجب أن يتضمن الموقع واجهة أمامية باستخدام HTML5، CSS3، وJavaScript، وواجهة خلفية باستخدام Node.js.
