@@ -25,20 +25,31 @@ function GeneratedWebsite() {
     setError('');
     try {
       const prompt = `
-من فضلك قم بإنشاء كود موقع إلكتروني بسيط باللغة العربية يعتمد على المعلومات التالية:
+من فضلك قم بإنشاء كود موقع إلكتروني احترافي باللغة العربية يعتمد على المعلومات التالية:
 
 اسم الموقع: ${state.projectName}
 وصف الموقع: ${state.projectDescription}
 
-يجب أن يتضمن الكود صفحة HTML واحدة تحمل اسم "index.html" وتحتوي على العناصر الأساسية للموقع.
+يجب أن يتضمن الموقع واجهة أمامية باستخدام HTML5، CSS3، وJavaScript، وواجهة خلفية باستخدام Node.js.
+
+يجب أن يحتوي المشروع على الملفات والمجلدات التالية:
+
+- مجلد "public" يحتوي على الملفات الثابتة مثل index.html، styles.css، وmain.js.
+- مجلد "server" يحتوي على ملف "server.js" والذي يشغل خادم Node.js باستخدام Express.js.
 
 التزم بالهيكل التالي في إجابتك:
 
 {
   "files": [
-    { "path": "index.html", "content": "<!DOCTYPE html>... </html>" }
+    { "path": "public/index.html", "content": "<!DOCTYPE html>... </html>" },
+    { "path": "public/styles.css", "content": "/* CSS content */" },
+    { "path": "public/main.js", "content": "// JavaScript content" },
+    { "path": "server/server.js", "content": "// Node.js server code" },
+    { "path": "package.json", "content": "{ /* package.json content */ }" }
   ]
 }
+
+تأكد من أن "server.js" يستخدم Express.js لإنشاء خادم ويب ويخدم الملفات الثابتة من مجلد "public".
 
 لا تضف أي نص إضافي خارج نطاق JSON المطلوب.
       `;
