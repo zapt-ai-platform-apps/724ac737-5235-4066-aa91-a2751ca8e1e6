@@ -63,7 +63,7 @@ function GeneratedWebsite() {
         response_type: 'json'
       });
 
-      if (result && result.files) {
+      if (result && Array.isArray(result.files)) {
         const zip = new JSZip();
         result.files.forEach(file => {
           zip.file(file.path, file.content);

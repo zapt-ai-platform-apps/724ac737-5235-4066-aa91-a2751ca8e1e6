@@ -86,7 +86,7 @@ function BuilderForm() {
           onChange={(e) => setProjectType(e.target.value)}
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
         >
-          <option value="" disabled selected>
+          <option value="" disabled>
             اختر نوع الموقع
           </option>
           {siteTypes.map((type) => (
