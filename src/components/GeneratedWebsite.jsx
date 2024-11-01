@@ -22,15 +22,11 @@ function GeneratedWebsite() {
   const handleGenerateWebsite = async () => {
     setLoadingWebsite(true);
     try {
-      const features = state.selectedFeatures.join(', ') + (state.additionalFeatures ? ', ' + state.additionalFeatures : '');
       const prompt = `
-من فضلك قم بإنشاء كود موقع إلكتروني في مجال ${state.projectField} باللغة العربية بناءً على المعلومات التالية:
+من فضلك قم بإنشاء كود موقع إلكتروني باللغة العربية بناءً على المعلومات التالية:
 
 اسم الموقع: ${state.projectName}
 وصف الموقع: ${state.projectDescription}
-الميزات المطلوبة: ${features}
-التصميم المرغوب: ${state.projectDesign}
-الجمهور المستهدف: ${state.projectAudience}
 
 يجب أن يكون الكود في صيغة JSON بالهيكل التالي:
 

@@ -1,61 +1,21 @@
 import { createSignal } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
-import { For } from 'solid-js';
 
 function BuilderForm() {
   const navigate = useNavigate();
 
   const [projectName, setProjectName] = createSignal('');
-  const [projectField, setProjectField] = createSignal('');
   const [projectDescription, setProjectDescription] = createSignal('');
-  const [selectedFeatures, setSelectedFeatures] = createSignal([]);
-  const [additionalFeatures, setAdditionalFeatures] = createSignal('');
-  const [projectDesign, setProjectDesign] = createSignal('');
-  const [projectAudience, setProjectAudience] = createSignal('');
-
-  const projectFields = [
-    { value: '', label: 'اختر مجال الموقع' },
-    { value: 'تجارة إلكترونية', label: 'تجارة إلكترونية' },
-    { value: 'تعليم', label: 'تعليم' },
-    { value: 'صحة', label: 'صحة' },
-    { value: 'ترفيه', label: 'ترفيه' },
-    { value: 'آخر', label: 'آخر' },
-  ];
-
-  const featureOptions = [
-    { value: 'تسجيل الدخول وتسجيل الحساب', label: 'تسجيل الدخول وتسجيل الحساب' },
-    { value: 'سلة التسوق', label: 'سلة التسوق' },
-    { value: 'محرك بحث', label: 'محرك بحث' },
-    { value: 'دعم متعدد اللغات', label: 'دعم متعدد اللغات' },
-    { value: 'معرض الصور', label: 'معرض الصور' },
-    { value: 'نظام تواصل مع العملاء', label: 'نظام تواصل مع العملاء' },
-    { value: 'مدونة', label: 'مدونة' },
-    { value: 'نماذج اتصال', label: 'نماذج اتصال' },
-    { value: 'خرائط الموقع', label: 'خرائط الموقع' },
-    { value: 'تسجيل النشرات البريدية', label: 'تسجيل النشرات البريدية' },
-  ];
 
   const handleGeneratePlan = async () => {
-    if (
-      !projectName() ||
-      !projectField() ||
-      !projectDescription() ||
-      (!selectedFeatures().length && !additionalFeatures()) ||
-      !projectDesign() ||
-      !projectAudience()
-    )
-      return;
+    if (!projectName() || !projectDescription()) return;
 
     try {
-      const features = selectedFeatures().join(', ') + (additionalFeatures() ? ', ' + additionalFeatures() : '');
       const prompt = `
-من فضلك قم بإنشاء خطة مشروع احترافية لإنشاء موقع إلكتروني في مجال ${projectField()} باللغة العربية بالاستناد إلى المعلومات التالية:
+من فضلك قم بإنشاء خطة مشروع احترافية لإنشاء موقع إلكتروني باللغة العربية بالاستناد إلى المعلومات التالية:
 
 اسم الموقع: ${projectName()}
 وصف الموقع: ${projectDescription()}
-الميزات المطلوبة: ${features}
-التصميم المرغوب: ${projectDesign()}
-الجمهور المستهدف: ${projectAudience()}
 
 يجب أن تكون الخطة مفصلة وتشمل جميع العناصر الأساسية لموقع احترافي، بما في ذلك التحليل الفني، ومتطلبات التطوير، وخطط التصميم، وخطوات الإطلاق.
       `;
@@ -67,12 +27,7 @@ function BuilderForm() {
         state: {
           generatedPlan: result,
           projectName: projectName(),
-          projectField: projectField(),
-          projectDescription: projectDescription(),
-          selectedFeatures: selectedFeatures(),
-          additionalFeatures: additionalFeatures(),
-          projectDesign: projectDesign(),
-          projectAudience: projectAudience()
+          projectDescription: projectDescription()
         }
       });
     } catch (error) {
@@ -81,25 +36,12 @@ function BuilderForm() {
   };
 
   const handleGenerateWebsite = () => {
-    if (
-      !projectName() ||
-      !projectField() ||
-      !projectDescription() ||
-      (!selectedFeatures().length && !additionalFeatures()) ||
-      !projectDesign() ||
-      !projectAudience()
-    )
-      return;
+    if (!projectName() || !projectDescription()) return;
 
     navigate('/website', {
       state: {
         projectName: projectName(),
-        projectField: projectField(),
-        projectDescription: projectDescription(),
-        selectedFeatures: selectedFeatures(),
-        additionalFeatures: additionalFeatures(),
-        projectDesign: projectDesign(),
-        projectAudience: projectAudience()
+        projectDescription: projectDescription()
       }
     });
   };
@@ -115,19 +57,6 @@ function BuilderForm() {
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           placeholder="اسم الموقع"
         />
-        <select
-          value={projectField()}
-          onChange={(e) => setProjectField(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer"
-        >
-          <For each={projectFields}>
-            {(field) => (
-              <option value={field.value} disabled={field.value === ''}>
-                {field.label}
-              </option>
-            )}
-          </For>
-        </select>
         <textarea
           value={projectDescription()}
           onInput={(e) => setProjectDescription(e.target.value)}
@@ -135,55 +64,6 @@ function BuilderForm() {
           rows="3"
           placeholder="وصف الموقع..."
         ></textarea>
-        <div class="space-y-2">
-          <label class="font-semibold text-gray-700">الميزات المطلوبة:</label>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <For each={featureOptions}>
-              {(feature) => (
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
-                    id={feature.value}
-                    value={feature.value}
-                    checked={selectedFeatures().includes(feature.value)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedFeatures([...selectedFeatures(), feature.value]);
-                      } else {
-                        setSelectedFeatures(selectedFeatures().filter((item) => item !== feature.value));
-                      }
-                    }}
-                    class="cursor-pointer"
-                  />
-                  <label for={feature.value} class="mr-2 cursor-pointer">
-                    {feature.label}
-                  </label>
-                </div>
-              )}
-            </For>
-          </div>
-          <textarea
-            value={additionalFeatures()}
-            onInput={(e) => setAdditionalFeatures(e.target.value)}
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-            rows="2"
-            placeholder="ميزات إضافية..."
-          ></textarea>
-        </div>
-        <input
-          type="text"
-          value={projectDesign()}
-          onInput={(e) => setProjectDesign(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          placeholder="التصميم المرغوب (ألوان، نمط...)"
-        />
-        <input
-          type="text"
-          value={projectAudience()}
-          onInput={(e) => setProjectAudience(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          placeholder="الجمهور المستهدف"
-        />
         <div class="flex space-x-4 space-x-reverse">
           <button
             class="mt-4 flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
