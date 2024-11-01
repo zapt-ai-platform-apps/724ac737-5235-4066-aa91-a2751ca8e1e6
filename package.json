@@ -11,8 +11,9 @@
   "dependencies": {
     "solid-js": "^1.8.22",
     "@sentry/browser": "^8.35.0",
-    "@zapt/zapt-js": "^1.0.5",
-    "solid-markdown": "^2.0.13"
+    "@sentry/node": "^8.35.0",
+    "solid-markdown": "^2.0.13",
+    "openai": "^4.2.0"
   },
   "devDependencies": {
     "vite": "^5.4.7",

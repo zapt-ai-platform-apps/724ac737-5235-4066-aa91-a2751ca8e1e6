@@ -1,5 +1,4 @@
 import { createSignal, Show } from 'solid-js';
-import { createEvent } from './supabaseClient';
 import Header from './components/Header';
 import BuilderForm from './components/BuilderForm';
 import GeneratedPlan from './components/GeneratedPlan';
@@ -59,12 +58,17 @@ function App() {
 الجمهور المستهدف: ${projectAudience()}
 
 يجب أن تكون الخطة مفصلة وتشمل جميع العناصر الأساسية لمشروع احترافي، بما في ذلك التحليل الفني، ومتطلبات التطوير، وخطط التصميم، وخطوات الإطلاق.
-`;
-      const result = await createEvent('chatgpt_request', {
-        prompt: prompt,
-        response_type: 'text',
+      `;
+      const response = await fetch('/api/generatePlan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
       });
-      setGeneratedPlan(result);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const result = await response.json();
+      setGeneratedPlan(result.plan);
     } catch (error) {
       console.error('Error generating plan:', error);
     } finally {
