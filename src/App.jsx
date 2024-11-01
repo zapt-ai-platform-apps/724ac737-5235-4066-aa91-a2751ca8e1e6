@@ -1,7 +1,10 @@
 import { createSignal, Show } from 'solid-js';
+import { Routes, Route } from '@solidjs/router';
+
 import Header from './components/Header';
 import BuilderForm from './components/BuilderForm';
 import GeneratedPlan from './components/GeneratedPlan';
+import DesignList from './components/DesignList';
 import { createEvent } from './supabaseClient';
 
 function App() {
@@ -65,28 +68,38 @@ function App() {
     <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-4 text-gray-800" dir="rtl">
       <div class="max-w-6xl mx-auto h-full flex flex-col">
         <Header />
-        <BuilderForm
-          projectName={projectName}
-          setProjectName={setProjectName}
-          projectField={projectField}
-          setProjectField={setProjectField}
-          projectDescription={projectDescription}
-          setProjectDescription={setProjectDescription}
-          selectedFeatures={selectedFeatures}
-          setSelectedFeatures={setSelectedFeatures}
-          additionalFeatures={additionalFeatures}
-          setAdditionalFeatures={setAdditionalFeatures}
-          projectDesign={projectDesign}
-          setProjectDesign={setProjectDesign}
-          projectAudience={projectAudience}
-          setProjectAudience={setProjectAudience}
-          projectFields={projectFields}
-          loading={loading}
-          handleGeneratePlan={handleGeneratePlan}
-        />
-        <Show when={generatedPlan()}>
-          <GeneratedPlan generatedPlan={generatedPlan} />
-        </Show>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <BuilderForm
+                  projectName={projectName}
+                  setProjectName={setProjectName}
+                  projectField={projectField}
+                  setProjectField={setProjectField}
+                  projectDescription={projectDescription}
+                  setProjectDescription={setProjectDescription}
+                  selectedFeatures={selectedFeatures}
+                  setSelectedFeatures={setSelectedFeatures}
+                  additionalFeatures={additionalFeatures}
+                  setAdditionalFeatures={setAdditionalFeatures}
+                  projectDesign={projectDesign}
+                  setProjectDesign={setProjectDesign}
+                  projectAudience={projectAudience}
+                  setProjectAudience={setProjectAudience}
+                  projectFields={projectFields}
+                  loading={loading}
+                  handleGeneratePlan={handleGeneratePlan}
+                />
+                <Show when={generatedPlan()}>
+                  <GeneratedPlan generatedPlan={generatedPlan} />
+                </Show>
+              </>
+            }
+          />
+          <Route path="/designs" element={<DesignList />} />
+        </Routes>
       </div>
     </div>
   );
