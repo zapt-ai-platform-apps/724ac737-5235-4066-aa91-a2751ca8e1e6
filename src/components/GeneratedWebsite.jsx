@@ -1,30 +1,30 @@
 import { useNavigate, useLocation } from '@solidjs/router';
 import { saveAs } from 'file-saver';
-import { Show, createSignal } from 'solid-js';
+import { Show, createSignal, onMount } from 'solid-js';
 import { createEvent } from '../supabaseClient';
+import JSZip from 'jszip';
 
 function GeneratedWebsite() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [generatedWebsite, setGeneratedWebsite] = createSignal(location.state?.generatedWebsite || '');
+  const state = location.state;
   const [loadingWebsite, setLoadingWebsite] = createSignal(false);
+  const [zipBlob, setZipBlob] = createSignal(null);
 
-  const goBack = () => {
-    navigate(-1);
-  };
-
-  const handleGenerateWebsite = async () => {
-    const state = location.state;
+  onMount(() => {
     if (!state) {
       navigate('/');
       return;
     }
+    handleGenerateWebsite();
+  });
 
+  const handleGenerateWebsite = async () => {
     setLoadingWebsite(true);
     try {
       const features = state.selectedFeatures.join(', ') + (state.additionalFeatures ? ', ' + state.additionalFeatures : '');
       const prompt = `
-من فضلك قم بإنشاء كود HTML وCSS وJavaScript لموقع إلكتروني في مجال ${state.projectField} باللغة العربية بالاستناد إلى المعلومات التالية:
+من فضلك قم بإنشاء كود موقع إلكتروني في مجال ${state.projectField} باللغة العربية بناءً على المعلومات التالية:
 
 اسم الموقع: ${state.projectName}
 وصف الموقع: ${state.projectDescription}
@@ -32,13 +32,32 @@ function GeneratedWebsite() {
 التصميم المرغوب: ${state.projectDesign}
 الجمهور المستهدف: ${state.projectAudience}
 
-يجب أن يكون الكود كاملاً وقابلاً للتنفيذ، مع فصل ملفات HTML وCSS وJavaScript، واستخدام تعليقات داخل الكود لشرح الأجزاء المختلفة.
+يجب أن يكون الكود في صيغة JSON بالهيكل التالي:
+
+{
+  "files": [
+    { "path": "index.html", "content": "<html>...</html>" },
+    { "path": "styles/main.css", "content": "body { ... }" },
+    { "path": "scripts/app.js", "content": "console.log('hello');" }
+  ]
+}
+
+يشمل الكود جميع الملفات الضرورية (HTML، CSS، JavaScript) ويتم ترتيبها بالشكل المناسب.
+
+تأكد من أن الكود جاهز للتنفيذ، واستخدم تعليقات داخل الكود لشرح الأجزاء المختلفة.
       `;
       const result = await createEvent('chatgpt_request', {
         prompt: prompt.trim(),
-        response_type: 'code'
+        response_type: 'json'
       });
-      setGeneratedWebsite(result);
+
+      const zip = new JSZip();
+      result.files.forEach(file => {
+        zip.file(file.path, file.content);
+      });
+
+      const blob = await zip.generateAsync({ type: 'blob' });
+      setZipBlob(blob);
     } catch (error) {
       console.error('Error generating website:', error);
     } finally {
@@ -47,8 +66,9 @@ function GeneratedWebsite() {
   };
 
   const downloadWebsite = () => {
-    const blob = new Blob([generatedWebsite()], { type: 'text/plain;charset=utf-8' });
-    saveAs(blob, 'website_code.txt');
+    if (zipBlob()) {
+      saveAs(zipBlob(), 'website.zip');
+    }
   };
 
   return (
@@ -57,37 +77,25 @@ function GeneratedWebsite() {
         <h2 class="text-2xl font-bold text-purple-600">الموقع المُولد</h2>
         <button
           class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          onClick={goBack}
+          onClick={() => navigate(-1)}
         >
           رجوع
         </button>
       </div>
-      <Show when={!generatedWebsite() && !loadingWebsite()}>
-        <p class="text-gray-700 mb-4">اضغط على زر "توليد الموقع" للبدء في توليد الموقع.</p>
-        <button
-          class={`px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-            loadingWebsite() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-          }`}
-          onClick={handleGenerateWebsite}
-          disabled={loadingWebsite()}
-        >
-          {loadingWebsite() ? 'جاري التوليد...' : 'توليد الموقع'}
-        </button>
-      </Show>
       <Show when={loadingWebsite()}>
         <p class="text-gray-700 mb-4">جاري التوليد، يرجى الانتظار...</p>
       </Show>
-      <Show when={generatedWebsite()}>
-        <p class="text-gray-700 mb-4">لقد تم توليد الموقع بناءً على مدخلاتك. يمكنك تنزيل الكود للاطلاع عليه.</p>
+      <Show when={!loadingWebsite() && zipBlob()}>
+        <p class="text-gray-700 mb-4">تم توليد الموقع بنجاح. يمكنك تنزيله كملف zip.</p>
         <button
           class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer mb-4"
           onClick={downloadWebsite}
         >
           تنزيل الموقع
         </button>
-        <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto flex-1">
-          <code>{generatedWebsite()}</code>
-        </pre>
+      </Show>
+      <Show when={!loadingWebsite() && !zipBlob()}>
+        <p class="text-gray-700 mb-4">حدث خطأ أثناء توليد الموقع.</p>
       </Show>
     </div>
   );

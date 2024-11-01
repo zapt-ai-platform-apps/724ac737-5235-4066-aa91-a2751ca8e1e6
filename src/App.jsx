@@ -6,13 +6,13 @@ import GeneratedWebsite from './components/GeneratedWebsite';
 
 function App() {
   return (
-    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-4 text-gray-800" dir="rtl">
+    <div class="h-full bg-gradient-to-br from-purple-100 to-blue-100 p-4 text-gray-800" dir="rtl">
       <div class="max-w-6xl mx-auto h-full flex flex-col">
         <Header />
         <Routes>
-          <Route path="/" element={<BuilderForm />} />
-          <Route path="/plan" element={<GeneratedPlan />} />
-          <Route path="/website" element={<GeneratedWebsite />} />
+          <Route path="/" component={BuilderForm} />
+          <Route path="/plan" component={GeneratedPlan} />
+          <Route path="/website" component={GeneratedWebsite} />
         </Routes>
       </div>
     </div>

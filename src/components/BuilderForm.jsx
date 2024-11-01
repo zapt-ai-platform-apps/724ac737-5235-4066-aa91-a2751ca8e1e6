@@ -1,12 +1,9 @@
 import { createSignal } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { For } from 'solid-js';
-import { createEvent } from '../supabaseClient';
 
 function BuilderForm() {
   const navigate = useNavigate();
-  const [loadingPlan, setLoadingPlan] = createSignal(false);
-  const [loadingWebsite, setLoadingWebsite] = createSignal(false);
 
   const [projectName, setProjectName] = createSignal('');
   const [projectField, setProjectField] = createSignal('');
@@ -49,7 +46,6 @@ function BuilderForm() {
     )
       return;
 
-    setLoadingPlan(true);
     try {
       const features = selectedFeatures().join(', ') + (additionalFeatures() ? ', ' + additionalFeatures() : '');
       const prompt = `
@@ -67,15 +63,24 @@ function BuilderForm() {
         prompt: prompt.trim(),
         response_type: 'text'
       });
-      navigate('/plan', { state: { generatedPlan: result } });
+      navigate('/plan', {
+        state: {
+          generatedPlan: result,
+          projectName: projectName(),
+          projectField: projectField(),
+          projectDescription: projectDescription(),
+          selectedFeatures: selectedFeatures(),
+          additionalFeatures: additionalFeatures(),
+          projectDesign: projectDesign(),
+          projectAudience: projectAudience()
+        }
+      });
     } catch (error) {
       console.error('Error generating plan:', error);
-    } finally {
-      setLoadingPlan(false);
     }
   };
 
-  const handleGenerateWebsite = async () => {
+  const handleGenerateWebsite = () => {
     if (
       !projectName() ||
       !projectField() ||
@@ -86,30 +91,17 @@ function BuilderForm() {
     )
       return;
 
-    setLoadingWebsite(true);
-    try {
-      const features = selectedFeatures().join(', ') + (additionalFeatures() ? ', ' + additionalFeatures() : '');
-      const prompt = `
-من فضلك قم بإنشاء كود HTML وCSS وJavaScript لموقع إلكتروني في مجال ${projectField()} باللغة العربية بالاستناد إلى المعلومات التالية:
-
-اسم الموقع: ${projectName()}
-وصف الموقع: ${projectDescription()}
-الميزات المطلوبة: ${features}
-التصميم المرغوب: ${projectDesign()}
-الجمهور المستهدف: ${projectAudience()}
-
-يجب أن يكون الكود كاملاً وقابلاً للتنفيذ، مع فصل ملفات HTML وCSS وJavaScript، واستخدام تعليقات داخل الكود لشرح الأجزاء المختلفة.
-      `;
-      const result = await createEvent('chatgpt_request', {
-        prompt: prompt.trim(),
-        response_type: 'code'
-      });
-      navigate('/website', { state: { generatedWebsite: result } });
-    } catch (error) {
-      console.error('Error generating website:', error);
-    } finally {
-      setLoadingWebsite(false);
-    }
+    navigate('/website', {
+      state: {
+        projectName: projectName(),
+        projectField: projectField(),
+        projectDescription: projectDescription(),
+        selectedFeatures: selectedFeatures(),
+        additionalFeatures: additionalFeatures(),
+        projectDesign: projectDesign(),
+        projectAudience: projectAudience()
+      }
+    });
   };
 
   return (
@@ -194,22 +186,16 @@ function BuilderForm() {
         />
         <div class="flex space-x-4 space-x-reverse">
           <button
-            class={`mt-4 flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-              loadingPlan() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            }`}
+            class="mt-4 flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             onClick={handleGeneratePlan}
-            disabled={loadingPlan()}
           >
-            {loadingPlan() ? 'جاري التحميل...' : 'توليد الخطة'}
+            توليد الخطة
           </button>
           <button
-            class={`mt-4 flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-              loadingWebsite() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            }`}
+            class="mt-4 flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             onClick={handleGenerateWebsite}
-            disabled={loadingWebsite()}
           >
-            {loadingWebsite() ? 'جاري التوليد...' : 'توليد الموقع'}
+            توليد الموقع
           </button>
         </div>
       </div>

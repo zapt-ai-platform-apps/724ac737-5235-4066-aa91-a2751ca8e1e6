@@ -5,14 +5,11 @@ import { SolidMarkdown } from 'solid-markdown';
 function GeneratedPlan() {
   const navigate = useNavigate();
   const location = useLocation();
-  const generatedPlan = location.state?.generatedPlan || '';
-
-  const goBack = () => {
-    navigate(-1);
-  };
+  const state = location.state;
+  const generatedPlan = state?.generatedPlan || '';
 
   const handleGenerateWebsite = () => {
-    navigate('/website', { state: { generatedWebsite: '' } });
+    navigate('/website', { state });
   };
 
   return (
@@ -21,7 +18,7 @@ function GeneratedPlan() {
         <h2 class="text-2xl font-bold text-purple-600">الخطة المقترحة</h2>
         <button
           class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          onClick={goBack}
+          onClick={() => navigate(-1)}
         >
           رجوع
         </button>
