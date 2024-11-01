@@ -37,6 +37,7 @@ function GeneratedWebsite() {
 
 - مجلد "public" يحتوي على الملفات الثابتة مثل index.html، styles.css، وmain.js.
 - مجلد "server" يحتوي على ملف "server.js" والذي يشغل خادم Node.js باستخدام Express.js.
+- مجلد "admin" يحتوي على لوحة تحكم المشرف مع الملفات اللازمة.
 
 التزم بالهيكل التالي في إجابتك:
 
@@ -45,12 +46,15 @@ function GeneratedWebsite() {
     { "path": "public/index.html", "content": "<!DOCTYPE html>... </html>" },
     { "path": "public/styles.css", "content": "/* CSS content */" },
     { "path": "public/main.js", "content": "// JavaScript content" },
+    { "path": "admin/admin.html", "content": "<!DOCTYPE html>... </html>" },
+    { "path": "admin/admin.css", "content": "/* Admin CSS content */" },
+    { "path": "admin/admin.js", "content": "// Admin JavaScript content" },
     { "path": "server/server.js", "content": "// Node.js server code" },
     { "path": "package.json", "content": "{ /* package.json content */ }" }
   ]
 }
 
-تأكد من أن "server.js" يستخدم Express.js لإنشاء خادم ويب ويخدم الملفات الثابتة من مجلد "public".
+تأكد من أن "server.js" يستخدم Express.js لإنشاء خادم ويب ويخدم الملفات الثابتة من مجلد "public" ويدعم ملفات لوحة التحكم من مجلد "admin".
 
 لا تضف أي نص إضافي خارج نطاق JSON المطلوب.
       `;
