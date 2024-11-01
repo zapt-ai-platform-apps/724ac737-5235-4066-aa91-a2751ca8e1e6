@@ -1,99 +1,105 @@
 import { createSignal, Show } from 'solid-js';
 import { createEvent } from './supabaseClient';
 import Header from './components/Header';
-import ProjectForm from './components/ProjectForm';
-import ProjectDescription from './components/ProjectDescription';
+import BuilderForm from './components/BuilderForm';
+import GeneratedPlan from './components/GeneratedPlan';
 
 function App() {
   const [loading, setLoading] = createSignal(false);
-  const [projectTitle, setProjectTitle] = createSignal('');
+  const [projectName, setProjectName] = createSignal('');
   const [projectType, setProjectType] = createSignal('');
-  const [projectSpec, setProjectSpec] = createSignal('');
-  const [projectGoals, setProjectGoals] = createSignal('');
+  const [projectField, setProjectField] = createSignal('');
+  const [projectDescription, setProjectDescription] = createSignal('');
+  const [projectFeatures, setProjectFeatures] = createSignal('');
+  const [projectPlatforms, setProjectPlatforms] = createSignal('');
+  const [projectDesign, setProjectDesign] = createSignal('');
   const [projectAudience, setProjectAudience] = createSignal('');
-  const [projectBudget, setProjectBudget] = createSignal('');
-  const [projectTimeline, setProjectTimeline] = createSignal('');
-  const [projectTechnologies, setProjectTechnologies] = createSignal('');
-  const [generatedProject, setGeneratedProject] = createSignal('');
+  const [generatedPlan, setGeneratedPlan] = createSignal('');
 
   const projectTypes = [
     { value: '', label: 'اختر نوع المشروع' },
-    { value: 'تجاري', label: 'تجاري' },
-    { value: 'تعليمي', label: 'تعليمي' },
-    { value: 'صناعي', label: 'صناعي' },
-    { value: 'تكنولوجي', label: 'تكنولوجي' },
-    { value: 'صحي', label: 'صحي' },
+    { value: 'موقع إلكتروني', label: 'موقع إلكتروني' },
+    { value: 'تطبيق جوال', label: 'تطبيق جوال' },
+    { value: 'تطبيق سطح مكتب', label: 'تطبيق سطح مكتب' },
     { value: 'آخر', label: 'آخر' },
   ];
 
-  const handleGenerateProject = async () => {
+  const projectFields = [
+    { value: '', label: 'اختر مجال المشروع' },
+    { value: 'تجارة إلكترونية', label: 'تجارة إلكترونية' },
+    { value: 'تعليم', label: 'تعليم' },
+    { value: 'صحة', label: 'صحة' },
+    { value: 'ترفيه', label: 'ترفيه' },
+    { value: 'آخر', label: 'آخر' },
+  ];
+
+  const handleGeneratePlan = async () => {
     if (
-      !projectTitle() ||
+      !projectName() ||
       !projectType() ||
-      !projectSpec() ||
-      !projectGoals() ||
-      !projectAudience() ||
-      !projectBudget() ||
-      !projectTimeline() ||
-      !projectTechnologies()
+      !projectField() ||
+      !projectDescription() ||
+      !projectFeatures() ||
+      !projectPlatforms() ||
+      !projectDesign() ||
+      !projectAudience()
     )
       return;
 
     setLoading(true);
     try {
       const prompt = `
-من فضلك قم بإنشاء خطة مشروع احترافية باللغة العربية بالاستناد إلى المعلومات التالية:
+من فضلك قم بإنشاء خطة مشروع احترافية لإنشاء ${projectType()} في مجال ${projectField()} باللغة العربية بالاستناد إلى المعلومات التالية:
 
-عنوان المشروع: ${projectTitle()}
-نوع المشروع: ${projectType()}
-مواصفات المشروع: ${projectSpec()}
-الأهداف: ${projectGoals()}
+اسم المشروع: ${projectName()}
+وصف المشروع: ${projectDescription()}
+الميزات المطلوبة: ${projectFeatures()}
+منصة الاستهداف: ${projectPlatforms()}
+التصميم المرغوب: ${projectDesign()}
 الجمهور المستهدف: ${projectAudience()}
-الميزانية: ${projectBudget()}
-الجدول الزمني: ${projectTimeline()}
-التقنيات المستخدمة: ${projectTechnologies()}
 
-يجب أن تكون الخطة مفصلة وتشمل جميع العناصر الأساسية لمشروع احترافي.
+يجب أن تكون الخطة مفصلة وتشمل جميع العناصر الأساسية لمشروع احترافي، بما في ذلك التحليل الفني، ومتطلبات التطوير، وخطط التصميم، وخطوات الإطلاق.
 `;
       const result = await createEvent('chatgpt_request', {
         prompt: prompt,
         response_type: 'text',
       });
-      setGeneratedProject(result);
+      setGeneratedPlan(result);
     } catch (error) {
-      console.error('Error generating project:', error);
+      console.error('Error generating plan:', error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-4 text-gray-800" dir="rtl">
-      <div class="max-w-4xl mx-auto h-full flex flex-col">
+    <div class="h-full bg-gradient-to-br from-purple-100 to-blue-100 p-4 text-gray-800" dir="rtl">
+      <div class="max-w-6xl mx-auto h-full flex flex-col">
         <Header />
-        <ProjectForm
-          projectTitle={projectTitle}
-          setProjectTitle={setProjectTitle}
+        <BuilderForm
+          projectName={projectName}
+          setProjectName={setProjectName}
           projectType={projectType}
           setProjectType={setProjectType}
-          projectSpec={projectSpec}
-          setProjectSpec={setProjectSpec}
-          projectGoals={projectGoals}
-          setProjectGoals={setProjectGoals}
+          projectField={projectField}
+          setProjectField={setProjectField}
+          projectDescription={projectDescription}
+          setProjectDescription={setProjectDescription}
+          projectFeatures={projectFeatures}
+          setProjectFeatures={setProjectFeatures}
+          projectPlatforms={projectPlatforms}
+          setProjectPlatforms={setProjectPlatforms}
+          projectDesign={projectDesign}
+          setProjectDesign={setProjectDesign}
           projectAudience={projectAudience}
           setProjectAudience={setProjectAudience}
-          projectBudget={projectBudget}
-          setProjectBudget={setProjectBudget}
-          projectTimeline={projectTimeline}
-          setProjectTimeline={setProjectTimeline}
-          projectTechnologies={projectTechnologies}
-          setProjectTechnologies={setProjectTechnologies}
           projectTypes={projectTypes}
+          projectFields={projectFields}
           loading={loading}
-          handleGenerateProject={handleGenerateProject}
+          handleGeneratePlan={handleGeneratePlan}
         />
-        <Show when={generatedProject()}>
-          <ProjectDescription generatedProject={generatedProject} />
+        <Show when={generatedPlan()}>
+          <GeneratedPlan generatedPlan={generatedPlan} />
         </Show>
       </div>
     </div>

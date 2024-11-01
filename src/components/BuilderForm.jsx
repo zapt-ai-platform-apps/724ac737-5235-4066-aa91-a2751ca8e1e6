@@ -1,26 +1,27 @@
 import { For, Show } from 'solid-js';
 
-function ProjectForm(props) {
+function BuilderForm(props) {
   const {
-    projectTitle,
-    setProjectTitle,
+    projectName,
+    setProjectName,
     projectType,
     setProjectType,
-    projectSpec,
-    setProjectSpec,
-    projectGoals,
-    setProjectGoals,
+    projectField,
+    setProjectField,
+    projectDescription,
+    setProjectDescription,
+    projectFeatures,
+    setProjectFeatures,
+    projectPlatforms,
+    setProjectPlatforms,
+    projectDesign,
+    setProjectDesign,
     projectAudience,
     setProjectAudience,
-    projectBudget,
-    setProjectBudget,
-    projectTimeline,
-    setProjectTimeline,
-    projectTechnologies,
-    setProjectTechnologies,
     projectTypes,
+    projectFields,
     loading,
-    handleGenerateProject,
+    handleGeneratePlan,
   } = props;
 
   return (
@@ -29,10 +30,10 @@ function ProjectForm(props) {
       <div class="space-y-4">
         <input
           type="text"
-          value={projectTitle()}
-          onInput={(e) => setProjectTitle(e.target.value)}
+          value={projectName()}
+          onInput={(e) => setProjectName(e.target.value)}
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          placeholder="عنوان المشروع"
+          placeholder="اسم المشروع"
         />
         <select
           value={projectType()}
@@ -47,20 +48,47 @@ function ProjectForm(props) {
             )}
           </For>
         </select>
+        <select
+          value={projectField()}
+          onChange={(e) => setProjectField(e.target.value)}
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer"
+        >
+          <For each={projectFields}>
+            {(field) => (
+              <option value={field.value} disabled={field.value === ''}>
+                {field.label}
+              </option>
+            )}
+          </For>
+        </select>
         <textarea
-          value={projectSpec()}
-          onInput={(e) => setProjectSpec(e.target.value)}
+          value={projectDescription()}
+          onInput={(e) => setProjectDescription(e.target.value)}
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           rows="3"
-          placeholder="مواصفات المشروع..."
+          placeholder="وصف المشروع..."
         ></textarea>
         <textarea
-          value={projectGoals()}
-          onInput={(e) => setProjectGoals(e.target.value)}
+          value={projectFeatures()}
+          onInput={(e) => setProjectFeatures(e.target.value)}
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           rows="2"
-          placeholder="الأهداف..."
+          placeholder="الميزات المطلوبة..."
         ></textarea>
+        <input
+          type="text"
+          value={projectPlatforms()}
+          onInput={(e) => setProjectPlatforms(e.target.value)}
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          placeholder="منصة الاستهداف (مثال: Android، iOS، الويب)"
+        />
+        <input
+          type="text"
+          value={projectDesign()}
+          onInput={(e) => setProjectDesign(e.target.value)}
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          placeholder="التصميم المرغوب (ألوان، نمط...)"
+        />
         <input
           type="text"
           value={projectAudience()}
@@ -68,40 +96,19 @@ function ProjectForm(props) {
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           placeholder="الجمهور المستهدف"
         />
-        <input
-          type="text"
-          value={projectBudget()}
-          onInput={(e) => setProjectBudget(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          placeholder="الميزانية المقدرة"
-        />
-        <input
-          type="text"
-          value={projectTimeline()}
-          onInput={(e) => setProjectTimeline(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          placeholder="الجدول الزمني المتوقع"
-        />
-        <textarea
-          value={projectTechnologies()}
-          onInput={(e) => setProjectTechnologies(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          rows="2"
-          placeholder="التقنيات المستخدمة..."
-        ></textarea>
         <button
           class={`mt-4 w-full px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 ${
             loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
           }`}
-          onClick={handleGenerateProject}
+          onClick={handleGeneratePlan}
           disabled={loading()}
         >
           <Show when={loading()}>جاري التحميل...</Show>
-          <Show when={!loading()}>توليد خطة المشروع</Show>
+          <Show when={!loading()}>توليد الموقع/التطبيق</Show>
         </button>
       </div>
     </div>
   );
 }
 
-export default ProjectForm;
+export default BuilderForm;

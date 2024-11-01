@@ -1,7 +1,7 @@
 {
-  "name": "new-app",
+  "name": "professional-website-and-app-builder",
   "version": "1.0.0",
-  "description": "An AI-based Arabic project generator",
+  "description": "An AI-based builder for professional websites and apps",
   "type": "module",
   "scripts": {
     "dev": "vite",
