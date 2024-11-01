@@ -1,6 +1,8 @@
-import { createSignal, Show, For } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 import { createEvent } from './supabaseClient';
-import { SolidMarkdown } from "solid-markdown";
+import Header from './components/Header';
+import ProjectForm from './components/ProjectForm';
+import ProjectDescription from './components/ProjectDescription';
 
 function App() {
   const [loading, setLoading] = createSignal(false);
@@ -16,10 +18,6 @@ function App() {
     { value: 'صناعي', label: 'صناعي' },
     { value: 'تكنولوجي', label: 'تكنولوجي' },
     { value: 'صحي', label: 'صحي' },
-    { value: 'زراعي', label: 'زراعي' },
-    { value: 'سياحي', label: 'سياحي' },
-    { value: 'فني', label: 'فني' },
-    { value: 'خدماتي', label: 'خدماتي' },
   ];
 
   const handleGenerateProject = async () => {
@@ -40,58 +38,22 @@ function App() {
   };
 
   return (
-    <div class="h-full bg-gradient-to-br from-purple-100 to-blue-100 p-4" dir="rtl">
-      <div class="max-w-3xl mx-auto h-full">
-        <div class="flex justify-between items-center mb-8">
-          <h1 class="text-4xl font-bold text-purple-600">منشئ المشاريع العربية</h1>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-md h-full">
-          <h2 class="text-2xl font-bold mb-4 text-purple-600">ادخل عنوان ونوع ومواصفات المشروع</h2>
-          <input
-            type="text"
-            value={projectTitle()}
-            onInput={(e) => setProjectTitle(e.target.value)}
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border text-gray-700"
-            placeholder="عنوان المشروع"
-          />
-          <select
-            value={projectType()}
-            onChange={(e) => setProjectType(e.target.value)}
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer text-gray-700"
-          >
-            <For each={projectTypes}>
-              {(type) => (
-                <option value={type.value} disabled={type.value === ''}>
-                  {type.label}
-                </option>
-              )}
-            </For>
-          </select>
-          <textarea
-            value={projectSpec()}
-            onInput={(e) => setProjectSpec(e.target.value)}
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border text-gray-700"
-            rows="5"
-            placeholder="مواصفات المشروع..."
-          ></textarea>
-          <button
-            class={`mt-4 w-full px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-              loading() ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            onClick={handleGenerateProject}
-            disabled={loading()}
-          >
-            <Show when={loading()}>جاري التحميل...</Show>
-            <Show when={!loading()}>توليد المشروع</Show>
-          </button>
-        </div>
-
+    <div class="h-full bg-gradient-to-br from-purple-100 to-blue-100 p-4 text-gray-800" dir="rtl">
+      <div class="max-w-4xl mx-auto h-full">
+        <Header />
+        <ProjectForm
+          projectTitle={projectTitle}
+          setProjectTitle={setProjectTitle}
+          projectType={projectType}
+          setProjectType={setProjectType}
+          projectSpec={projectSpec}
+          setProjectSpec={setProjectSpec}
+          projectTypes={projectTypes}
+          loading={loading}
+          handleGenerateProject={handleGenerateProject}
+        />
         <Show when={generatedProject()}>
-          <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4 text-purple-600">وصف المشروع</h2>
-            <SolidMarkdown class="text-gray-700" children={generatedProject()} />
-          </div>
+          <ProjectDescription generatedProject={generatedProject} />
         </Show>
       </div>
     </div>
