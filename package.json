@@ -1,7 +1,7 @@
 {
-  "name": "professional-services",
+  "name": "blind-accessibility-services",
   "version": "1.0.0",
-  "description": "عرض خدماتنا المميزة في بناء المواقع الإلكترونية",
+  "description": "عرض خدماتنا لتحسين وصول المكفوفين إلى المحتوى الإلكتروني",
   "type": "module",
   "scripts": {
     "dev": "vite",

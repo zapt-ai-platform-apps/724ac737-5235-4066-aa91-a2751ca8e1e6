@@ -20,8 +20,8 @@ Sentry.init({
 window.progressierAppRuntimeSettings = {
   uid: import.meta.env.VITE_PUBLIC_APP_ID,
   icon512: "https://otebnzqfzytqyyjdfhzr.supabase.co/storage/v1/render/image/public/icons/updated-icon.png?width=512&height=512",
-  name: "خدماتنا المميزة",
-  shortName: "خدماتنا"
+  name: "خدمات Blind Accessibility",
+  shortName: "Blind Accessibility"
 };
 
 let script = document.createElement('script');
