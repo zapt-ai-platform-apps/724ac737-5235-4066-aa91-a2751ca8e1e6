@@ -31,13 +31,11 @@ function GeneratedWebsite() {
 نوع الموقع: ${state.projectType}
 وصف الموقع: ${state.projectDescription}
 
-يجب أن يتضمن الموقع واجهة أمامية باستخدام HTML5، CSS3، وJavaScript، وواجهة خلفية باستخدام Node.js.
+يجب أن يتضمن الموقع واجهة أمامية باستخدام HTML5، CSS3، وJavaScript، مع تصميم متجاوب وحديث يتوافق مع أفضل الممارسات. يجب أن يكون الكود منظماً ومشروحاً بشكل جيد.
 
 يجب أن يحتوي المشروع على الملفات والمجلدات التالية:
 
 - مجلد "public" يحتوي على الملفات الثابتة مثل index.html، styles.css، وmain.js.
-- مجلد "server" يحتوي على ملف "server.js" والذي يشغل خادم Node.js باستخدام Express.js.
-- مجلد "admin" يحتوي على لوحة تحكم المشرف مع الملفات اللازمة.
 
 التزم بالهيكل التالي في إجابتك:
 
@@ -45,18 +43,11 @@ function GeneratedWebsite() {
   "files": [
     { "path": "public/index.html", "content": "<!DOCTYPE html>... </html>" },
     { "path": "public/styles.css", "content": "/* CSS content */" },
-    { "path": "public/main.js", "content": "// JavaScript content" },
-    { "path": "admin/admin.html", "content": "<!DOCTYPE html>... </html>" },
-    { "path": "admin/admin.css", "content": "/* Admin CSS content */" },
-    { "path": "admin/admin.js", "content": "// Admin JavaScript content" },
-    { "path": "server/server.js", "content": "// Node.js server code" },
-    { "path": "package.json", "content": "{ /* package.json content */ }" }
+    { "path": "public/main.js", "content": "// JavaScript content" }
   ]
 }
 
-تأكد من أن "server.js" يستخدم Express.js لإنشاء خادم ويب ويخدم الملفات الثابتة من مجلد "public" ويدعم ملفات لوحة التحكم من مجلد "admin".
-
-لا تضف أي نص إضافي خارج نطاق JSON المطلوب.
+تأكد من أن تصميم الموقع احترافي ومتجاوب ويستخدم أحدث تقنيات الويب. لا تضف أي نص إضافي خارج نطاق JSON المطلوب.
       `;
       const result = await createEvent('chatgpt_request', {
         prompt: prompt.trim(),
