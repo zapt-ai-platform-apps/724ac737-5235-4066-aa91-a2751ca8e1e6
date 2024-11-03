@@ -1,5 +1,4 @@
 import { render } from 'solid-js/web';
-import { Router } from '@solidjs/router';
 import App from './App';
 import './index.css';
 
@@ -21,8 +20,8 @@ Sentry.init({
 window.progressierAppRuntimeSettings = {
   uid: import.meta.env.VITE_PUBLIC_APP_ID,
   icon512: "https://otebnzqfzytqyyjdfhzr.supabase.co/storage/v1/render/image/public/icons/updated-icon.png?width=512&height=512",
-  name: "منشئ المواقع الاحترافية",
-  shortName: "منشئ المواقع"
+  name: "خدماتنا المميزة",
+  shortName: "خدماتنا"
 };
 
 let script = document.createElement('script');
@@ -31,7 +30,5 @@ script.setAttribute('defer', 'true');
 document.querySelector('head').appendChild(script);
 
 render(() => (
-  <Router>
-    <App />
-  </Router>
+  <App />
 ), document.getElementById('root'));

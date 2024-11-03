@@ -1,7 +1,7 @@
 {
-  "name": "professional-website-builder",
+  "name": "professional-services",
   "version": "1.0.0",
-  "description": "منشئ المواقع الاحترافية باستخدام الذكاء الاصطناعي",
+  "description": "عرض خدماتنا المميزة في بناء المواقع الإلكترونية",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,12 +10,7 @@
   },
   "dependencies": {
     "solid-js": "^1.8.22",
-    "@sentry/browser": "^8.35.0",
-    "solid-markdown": "^2.0.13",
-    "@zapt/zapt-js": "^1.0.5",
-    "file-saver": "^2.0.5",
-    "@solidjs/router": "^0.8.4",
-    "jszip": "^3.10.1"
+    "@sentry/browser": "^8.35.0"
   },
   "devDependencies": {
     "vite": "^5.4.7",
